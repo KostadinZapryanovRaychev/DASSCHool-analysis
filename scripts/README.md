@@ -18,3 +18,6 @@ shebang and isn't marked executable, so run it with `bash` (or `sh`):
 ```sh
 bash analyse_mc_hp.sh
 ```
+
+to save in png
+events->Draw()
