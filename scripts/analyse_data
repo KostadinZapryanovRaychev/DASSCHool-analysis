@@ -3,7 +3,7 @@
 set -u
 set -o pipefail
 
-YOUR_DATASET="/eos/cms/store/group/phys_smp/ec/DAS/0071/D0_mkNtuples/LowPU/JetMET4/"
+YOUR_DATASET="/eos/cms/store/group/phys_smp/ec/DAS/0071/D0_mkNtuples/LowPU/"
 SCHOOL_EOS="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet"
 JES_CORRECTION_TAG="Summer24Prompt26_V1"
 LOW_PU_LUMI="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/D0_mkNtuples/LowPU.info"
@@ -11,22 +11,24 @@ TURNONS_ROOT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-e
 TURNONS_TXT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/TriggerCurves/turnons.txt"
 OBSERVABLES="$DAS_BASE/tools/lib64/plugins/SMP_26_017/libJetPtY.so"
 
-# Step 1: merge ntuples
-mkdir D1_mergeNtuples
-submit mergeNtuples -F "$YOUR_DATASET" D1_mergeNtuples /dev/null /dev/null
+for sample in JetMET4; do
+    # Step 1: merge ntuples
+    mkdir -p D1_mergeNtuples/$sample
+    submit mergeNtuples -F "$YOUR_DATASET/$sample" D1_mergeNtuples/$sample /dev/null /dev/null
 
-# Step 2: apply JES corrections
-mkdir -p D2_applyJEScorrections
-submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections "$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz" "$JES_CORRECTION_TAG" -N 5000000 -F
+    # Step 2: apply JES corrections
+    mkdir -p D2_applyJEScorrections/$sample
+    submit applyJEScorrections D1_mergeNtuples/$sample D2_applyJEScorrections/$sample "$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz" "$JES_CORRECTION_TAG" -N 5000000 -F
 
-# Step 3a: get trigger curves
-mkdir -p TriggerCurves
-submit getTriggerCurves D2_applyJEScorrections TriggerCurves "$LOW_PU_LUMI" true -N 5000000
+    # Step 3a: get trigger curves
+    mkdir -p TriggerCurves/$sample
+    submit getTriggerCurves D2_applyJEScorrections/$sample TriggerCurves/$sample "$LOW_PU_LUMI" true -N 5000000
 
-# Step 3b: apply data normalisation
-mkdir -p D3_applyDataNormalisation
-submit -N 5000000 -F applyDataNormalisation D2_applyJEScorrections D3_applyDataNormalisation "$LOW_PU_LUMI" /dev/null "$TURNONS_TXT" "$TURNONS_ROOT" pt prescales
+    # Step 3b: apply data normalisation
+    mkdir -p D3_applyDataNormalisation/$sample
+    submit -N 5000000 -F applyDataNormalisation D2_applyJEScorrections/$sample D3_applyDataNormalisation/$sample "$LOW_PU_LUMI" /dev/null "$TURNONS_TXT" "$TURNONS_ROOT" pt prescales
 
-# Step 4: get unfolded global distributions
-mkdir -p D4_applyUnf
-submit -N 5000000 -F getUnfGlobalDist D3_applyDataNormalisation D4_applyUnf true "$OBSERVABLES"
+    # Step 4: get unfolded global distributions
+    mkdir -p D4_applyUnf/$sample
+    submit -N 5000000 -F getUnfGlobalDist D3_applyDataNormalisation/$sample D4_applyUnf/$sample true "$OBSERVABLES"
+done
