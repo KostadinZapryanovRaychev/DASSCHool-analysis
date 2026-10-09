@@ -11,7 +11,7 @@ TURNONS_ROOT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-e
 TURNONS_TXT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/TriggerCurves/turnons.txt"
 OBSERVABLES="$DAS_BASE/tools/lib64/plugins/SMP_26_017/libJetPtY.so"
 
-for sample in JetMET4; do
+for sample in JetMET0 JetMET1 JetMET2 JetMET3 JetMET4 JetMET5; do
     mkdir -p D1_mergeNtuples/$sample
     submit mergeNtuples -F "$YOUR_DATASET/$sample" D1_mergeNtuples/$sample /dev/null /dev/null
 
