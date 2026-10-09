@@ -3,6 +3,7 @@
 set -u
 set -o pipefail
 
+YOUR_DATASET="/eos/cms/store/group/phys_smp/ec/DAS/0071/D0_mkNtuples/LowPU/JetMET4/"
 SCHOOL_EOS="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet"
 JES_CORRECTION_TAG="Summer24Prompt26_V1"
 LOW_PU_LUMI="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/D0_mkNtuples/LowPU.info"
@@ -11,9 +12,8 @@ TURNONS_TXT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex
 OBSERVABLES="$DAS_BASE/tools/lib64/plugins/SMP_26_017/libJetPtY.so"
 
 # step_one() {
-#     local input_path="$1"
 #     mkdir D1_mergeNtuples
-#     submit mergeNtuples -F "$input_path" D1_mergeNtuples /dev/null /dev/null
+#     submit mergeNtuples -F "$YOUR_DATASET" D1_mergeNtuples /dev/null /dev/null
 # }
 
 # step_two() {
