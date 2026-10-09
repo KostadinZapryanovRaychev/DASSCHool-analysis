@@ -25,7 +25,8 @@ run_step() {
 
 step_one() {
     local input_path="$1"
-    submit mergeNtuples -F "$input_path" D1_mergeNtuples /dev/null /dev/null
+    mkdir D1_mergeNtupless
+    submit mergeNtuples -F "$input_path" D1_mergeNtupless /dev/null /dev/null
 }
 
 step_two() {
