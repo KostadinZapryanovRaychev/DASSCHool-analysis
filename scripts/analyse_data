@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Run sequential commands, each operating on its own named inputs/outputs
-# (files/directories) rather than passing big data between steps as strings.
-# Replace the example step functions with the commands for your workflow.
 
 set -u
 set -o pipefail
@@ -32,22 +29,13 @@ step_one() {
 }
 
 step_two() {
-    local merged_dir="D1_mergeNtuples"
-    printf 'processing %s in step two\n' "$merged_dir"
 }
 
-step_three() {
-    local merged_dir="D1_mergeNtuples"
-    printf 'processing %s in step three\n' "$merged_dir"
-}
 
 main() {
     local input_path="$1"
 
     run_step "Merging N Tuples" step_one "$input_path" || return $?
-    run_step "Step 2" step_two || return $?
-    run_step "Step 3" step_three || return $?
-
     printf '\nAll steps completed successfully.\n'
 }
 

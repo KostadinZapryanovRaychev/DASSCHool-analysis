@@ -30,7 +30,7 @@ The `chmod` command is only needed once. The script can then be run with:
 It is passed through to `step_one`, which runs:
 
 ```sh
-parallel mergeNtuples -F "$input_path" D1_mergeNtuples/ D1_mergeNtuples /dev/null /dev/null
+parallel mergeNtuples -F "$input_path" D1_mergeNtuples /dev/null /dev/null
 ```
 
 ## How it works
