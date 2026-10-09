@@ -12,9 +12,18 @@ TURNONS_TXT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex
 OBSERVABLES="$DAS_BASE/tools/lib64/plugins/SMP_26_017/libJetPtY.so"
 
 for sample in JetMET4; do
+    mkdir -p D1_mergeNtuples/$sample
     submit mergeNtuples -F "$YOUR_DATASET/$sample" D1_mergeNtuples/$sample /dev/null /dev/null
+
+    mkdir -p D2_applyJEScorrections/$sample
     submit -N 5000000 -F applyJEScorrections D1_mergeNtuples/$sample D2_applyJEScorrections/$sample "$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz" "$JES_CORRECTION_TAG"
+
+    mkdir -p TriggerCurves/$sample
     submit -N 5000000 getTriggerCurves D2_applyJEScorrections/$sample TriggerCurves/$sample "$LOW_PU_LUMI" true
+
+    mkdir -p D3_applyDataNormalisation/$sample
     submit -N 5000000 -F applyDataNormalisation D2_applyJEScorrections/$sample D3_applyDataNormalisation/$sample "$LOW_PU_LUMI" /dev/null "$TURNONS_TXT" "$TURNONS_ROOT" pt prescales
+
+    mkdir -p D4_applyUnf/$sample
     submit -N 5000000 getUnfGlobalDist D3_applyDataNormalisation/$sample D4_applyUnf/$sample true "$OBSERVABLES"
 done
