@@ -3,6 +3,8 @@
 set -u
 set -o pipefail
 
+SCHOOL_EOS="eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet"
+
 # step_one() {
 #     local input_path="$1"
 #     mkdir D1_mergeNtupless
@@ -12,7 +14,7 @@ set -o pipefail
 step_two() {
     local input_path="$1"
     mkdir D2_mergeNtupless
-    submit applyJEScorrections /eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/D1_mergeNtuples D2_applyJEScorrections_v2 /eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz Summer24Prompt26_V1 -N 5000000 -b -F
+    submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections $PWD/$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz Summer24Prompt26_V1 -N 5000000 -b -F
 }
 
 main() {
