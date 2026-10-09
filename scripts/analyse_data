@@ -3,7 +3,7 @@
 set -u
 set -o pipefail
 
-SCHOOL_EOS="eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet"
+SCHOOL_EOS="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet"
 JES_CORRECTION_TAG="Summer24Prompt26_V1"
 
 # step_one() {
@@ -15,7 +15,7 @@ JES_CORRECTION_TAG="Summer24Prompt26_V1"
 step_two() {
     local input_path="$1"
     mkdir -p D2_applyJEScorrections
-    submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections $PWD/$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz $JES_CORRECTION_TAG -N 5000000 -b -F
+    submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections $SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz $JES_CORRECTION_TAG -N 5000000 -b -F
 }
 
 main() {
