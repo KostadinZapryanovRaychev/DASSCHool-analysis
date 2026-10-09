@@ -6,6 +6,8 @@ set -o pipefail
 SCHOOL_EOS="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet"
 JES_CORRECTION_TAG="Summer24Prompt26_V1"
 LOW_PU_LUMI="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/D0_mkNtuples/LowPU.info"
+TURNONS_ROOT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/TriggerCurves/turnons.root"
+TURNONS_TXT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/TriggerCurves/turnons.txt"
 
 # step_one() {
 #     local input_path="$1"
@@ -28,7 +30,7 @@ LOW_PU_LUMI="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex
 step_three_two() {
     local input_path="$1"
     mkdir -p D3_applyDataNormalisation
-    submit -b -N 5000000 -F applyDataNormalisation D2_applyJEScorrections  D3_applyDataNormalisation $LOW_PU_LUMI /dev/null $PWD/TriggerCurves/turnons.txt $PWD/TriggerCurves/turnons.root pt prescales
+    submit -b -N 5000000 -F applyDataNormalisation D2_applyJEScorrections  D3_applyDataNormalisation $LOW_PU_LUMI /dev/null $TURNONS_TXT $TURNONS_ROOT pt prescales
 }
 
 main() {
@@ -37,7 +39,7 @@ main() {
     # step_one "$input_path"
     # step_two "$input_path"
     # step_three_one "$input_path"
-    step_three_two "$input_path"
+    
 
 }
 
