@@ -8,6 +8,8 @@ and receives that command's output.
 
 From this directory:
 
+0.source tools/setup.sh
+
 ```sh
 chmod +x analyse_data
 ./analyse_data <input_path>

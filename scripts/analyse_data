@@ -31,7 +31,7 @@ run_step() {
 
 step_one() {
     local input_path="$1"
-    parallel mergeNtuples -F "$input_path" D1_mergeNtuples/ D1_mergeNtuples /dev/null /dev/null
+    submit mergeNtuples -F "$input_path" D1_mergeNtuples /dev/null /dev/null
 }
 
 step_two() {
