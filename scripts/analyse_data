@@ -1,38 +1,25 @@
 #!/usr/bin/env bash
 
-
 set -u
 set -o pipefail
 
-run_step() {
-    local step_name="$1"
-    shift
-    local status
-    printf ' %q' "$@"
-    printf '\n'
+# step_one() {
+#     local input_path="$1"
+#     mkdir D1_mergeNtupless
+#     submit mergeNtuples -F "$input_path" D1_mergeNtupless /dev/null /dev/null
+# }
 
-    if "$@"; then
-        return 0
-    else
-        status=$?
-        printf 'ERROR: %s failed with exit code %d\n' "$step_name" "$status" >&2
-        return "$status"
-    fi
-}
-
-step_one() {
+step_two() {
     local input_path="$1"
-    mkdir D1_mergeNtupless
-    submit mergeNtuples -F "$input_path" D1_mergeNtupless /dev/null /dev/null -b
+    mkdir D2_mergeNtupless
+    submit applyJEScorrections /eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/D1_mergeNtuples D2_applyJEScorrections_v2 /eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz Summer24Prompt26_V1 -N 5000000 -b -F
 }
-
-
 
 main() {
     local input_path="$1"
 
-    run_step "Merging N Tuples" step_one "$input_path" || return $?
-    printf '\nAll steps completed successfully.\n'
+    # step_one "$input_path"
+    step_two "$input_path"
 }
 
 if [[ $# -lt 1 ]]; then
@@ -40,8 +27,4 @@ if [[ $# -lt 1 ]]; then
     exit 1
 fi
 
-main "$1" || {
-    exit_code=$?
-    printf 'Workflow stopped.\n' >&2
-    exit "$exit_code"
-}
+main "$1"
