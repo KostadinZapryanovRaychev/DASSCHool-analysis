@@ -21,7 +21,7 @@ submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections "$SCHOOL_EOS/R
 
 # Step 3a: get trigger curves
 mkdir -p TriggerCurves
-submit getTriggerCurves D2_applyJEScorrections TriggerCurves "$LOW_PU_LUMI" true -b -N 5000000
+submit getTriggerCurves D2_applyJEScorrections TriggerCurves "$LOW_PU_LUMI" true -N 5000000
 
 # Step 3b: apply data normalisation
 mkdir -p D3_applyDataNormalisation
