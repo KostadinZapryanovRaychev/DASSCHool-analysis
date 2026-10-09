@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# Run sequential commands and pass each step's output to the next step.
+# Run sequential commands, each operating on its own named inputs/outputs
+# (files/directories) rather than passing big data between steps as strings.
 # Replace the example step functions with the commands for your workflow.
 
 set -u
 set -o pipefail
 
-STEP_RESULT=""
-
 run_step() {
     local step_name="$1"
     shift
-    local output
     local status
 
     printf '\n==> %s\n' "$step_name"
@@ -19,9 +17,8 @@ run_step() {
     printf ' %q' "$@"
     printf '\n'
 
-    if output="$("$@")"; then
-        STEP_RESULT="$output"
-        printf '%s\n' "$STEP_RESULT"
+    if "$@"; then
+        return 0
     else
         status=$?
         printf 'ERROR: %s failed with exit code %d\n' "$step_name" "$status" >&2
@@ -35,26 +32,21 @@ step_one() {
 }
 
 step_two() {
-    local previous_result="$1"
-    printf '%s -> processed by step two\n' "$previous_result"
+    local merged_dir="D1_mergeNtuples"
+    printf 'processing %s in step two\n' "$merged_dir"
 }
 
 step_three() {
-    local previous_result="$1"
-    printf '%s -> processed by step three\n' "$previous_result"
+    local merged_dir="D1_mergeNtuples"
+    printf 'processing %s in step three\n' "$merged_dir"
 }
 
 main() {
     local input_path="$1"
-    local previous_result
 
-    run_step "Step 1" step_one "$input_path" || return $?
-    previous_result="$STEP_RESULT"
-
-    run_step "Step 2" step_two "$previous_result" || return $?
-    previous_result="$STEP_RESULT"
-
-    run_step "Step 3" step_three "$previous_result" || return $?
+    run_step "Merging N Tuples" step_one "$input_path" || return $?
+    run_step "Step 2" step_two || return $?
+    run_step "Step 3" step_three || return $?
 
     printf '\nAll steps completed successfully.\n'
 }
