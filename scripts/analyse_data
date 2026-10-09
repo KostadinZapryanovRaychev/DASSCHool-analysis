@@ -11,49 +11,22 @@ TURNONS_ROOT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-e
 TURNONS_TXT="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/TriggerCurves/turnons.txt"
 OBSERVABLES="$DAS_BASE/tools/lib64/plugins/SMP_26_017/libJetPtY.so"
 
-# step_one() {
-#     mkdir D1_mergeNtuples
-#     submit mergeNtuples -F "$YOUR_DATASET" D1_mergeNtuples /dev/null /dev/null
-# }
+# Step 1: merge ntuples
+mkdir D1_mergeNtuples
+submit mergeNtuples -F "$YOUR_DATASET" D1_mergeNtuples /dev/null /dev/null
 
-# step_two() {
-#     local input_path="$1"
-#     mkdir -p D2_applyJEScorrections
-#     submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections $SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz $JES_CORRECTION_TAG -N 5000000 -b -F
-# }
+# Step 2: apply JES corrections
+mkdir -p D2_applyJEScorrections
+submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections "$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz" "$JES_CORRECTION_TAG" -N 5000000 -b -F
 
-# step_three_one() {
-#     local input_path="$1"
-#     mkdir -p TriggerCurves
-#     submit getTriggerCurves D2_applyJEScorrections TriggerCurves $LOW_PU_LUMI true -b -N 5000000
-# }
+# Step 3a: get trigger curves
+mkdir -p TriggerCurves
+submit getTriggerCurves D2_applyJEScorrections TriggerCurves "$LOW_PU_LUMI" true -b -N 5000000
 
-# step_three_two() {
-#     local input_path="$1"
-#     mkdir -p D3_applyDataNormalisation
-#     submit -b -N 5000000 -F applyDataNormalisation D2_applyJEScorrections  D3_applyDataNormalisation $LOW_PU_LUMI /dev/null $TURNONS_TXT $TURNONS_ROOT pt prescales
-# }
+# Step 3b: apply data normalisation
+mkdir -p D3_applyDataNormalisation
+submit -b -N 5000000 -F applyDataNormalisation D2_applyJEScorrections D3_applyDataNormalisation "$LOW_PU_LUMI" /dev/null "$TURNONS_TXT" "$TURNONS_ROOT" pt prescales
 
-step_four() {
-    local input_path="$1"
-    mkdir -p D4_applyUnf
-    submit -b -N 5000000 -F getUnfGlobalDist D3_applyDataNormalisation D4_applyUnf true $OBSERVABLES
-}
-
-main() {
-    local input_path="$1"
-
-    # step_one "$input_path"
-    # step_two "$input_path"
-    # step_three_one "$input_path"
-    # step_three_two "$input_path"
-    step_four "$input_path"
-
-}
-
-if [[ $# -lt 1 ]]; then
-    printf 'Usage: %s <input_path>\n' "$0" >&2
-    exit 1
-fi
-
-main "$1"
+# Step 4: get unfolded global distributions
+mkdir -p D4_applyUnf
+submit -b -N 5000000 -F getUnfGlobalDist D3_applyDataNormalisation D4_applyUnf true "$OBSERVABLES"
