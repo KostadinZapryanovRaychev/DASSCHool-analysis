@@ -39,6 +39,7 @@ main() {
     # step_one "$input_path"
     # step_two "$input_path"
     # step_three_one "$input_path"
+    step_three_two "$input_path"
     
 
 }
