@@ -14,4 +14,4 @@ mkdir -p M2_applyPUweights
 submit -N 5000000 -F applyPUweights M1_mergeNtuples M2_applyPUweights "$PU_Weights_JSON" "$PU_Weights_Tag" 99999
 
 mkdir -p M3_applyPUcleaning
-submit -N 5000000 -F applyPUcleaning M2_applyPUweights M3_applyPUcleaning M0_mkNtuples/HardMBeventIDs_lowPU.txt 98
+submit -N 5000000 -F applyPUcleaning M2_applyPUweights M3_applyPUcleaning M0_mkNtuples/HardMBeventIDs_highPU.txt 98
