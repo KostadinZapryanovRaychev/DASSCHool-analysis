@@ -8,10 +8,10 @@ PU_Weights_Tag="Collisions26_runC"
 
 
 mkdir -p M1_mergeNtuples
-submit mergeNtuples -F "$YOUR_DATASET/$sample" M1_mergeNtuples /dev/null /dev/null
+submit mergeNtuples -F "$YOUR_DATASET" M1_mergeNtuples /dev/null /dev/null
 
 mkdir -p M2_applyPUweights
-submit -N 5000000 -F applyPUweights M1_mergeNtuples/$sample M2_applyPUweights "$PU_Weights_JSON" "$PU_Weights_Tag" 99999
+submit -N 5000000 -F applyPUweights M1_mergeNtuples M2_applyPUweights "$PU_Weights_JSON" "$PU_Weights_Tag" 99999
 
 mkdir -p M3_applyPUcleaning
 submit -N 5000000 -F applyPUcleaning M2_applyPUweights M3_applyPUcleaning M0_mkNtuples/HardMBeventIDs_lowPU.txt 98
