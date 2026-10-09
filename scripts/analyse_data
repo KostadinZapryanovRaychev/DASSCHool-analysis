@@ -8,9 +8,6 @@ run_step() {
     local step_name="$1"
     shift
     local status
-
-    printf '\n==> %s\n' "$step_name"
-    printf 'Command:'
     printf ' %q' "$@"
     printf '\n'
 
@@ -29,8 +26,6 @@ step_one() {
     submit mergeNtuples -F "$input_path" D1_mergeNtupless /dev/null /dev/null
 }
 
-step_two() {
-}
 
 
 main() {
