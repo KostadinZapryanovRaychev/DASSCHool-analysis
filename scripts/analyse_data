@@ -19,24 +19,25 @@ LOW_PU_LUMI="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex
 #     submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections $SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz $JES_CORRECTION_TAG -N 5000000 -b -F
 # }
 
-step_three_one() {
-    local input_path="$1"
-    mkdir -p TriggerCurves
-    submit getTriggerCurves D2_applyJEScorrections TriggerCurves $LOW_PU_LUMI true -b -N 5000000
-}
-
-# step_three_two() {
+# step_three_one() {
 #     local input_path="$1"
-#     mkdir -p D3_applyDataNormalisation
-#     submit applyDataNormalisation D2_applyJEScorrections D3_applyDataNormalisation -N 5000000 -b -F
+#     mkdir -p TriggerCurves
+#     submit getTriggerCurves D2_applyJEScorrections TriggerCurves $LOW_PU_LUMI true -b -N 5000000
 # }
+
+step_three_two() {
+    local input_path="$1"
+    mkdir -p D3_applyDataNormalisation
+    submit -b -N 5000000 -F applyDataNormalisation D2_applyJEScorrections  D3_applyDataNormalisation $LOW_PU_LUMI /dev/null $PWD/TriggerCurves/turnons.txt $PWD/TriggerCurves/turnons.root pt prescales
+}
 
 main() {
     local input_path="$1"
 
     # step_one "$input_path"
     # step_two "$input_path"
-    step_three_one "$input_path"
+    # step_three_one "$input_path"
+    step_three_two "$input_path"
 
 }
 
