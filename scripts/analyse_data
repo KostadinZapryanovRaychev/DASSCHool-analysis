@@ -5,6 +5,7 @@ set -o pipefail
 
 SCHOOL_EOS="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet"
 JES_CORRECTION_TAG="Summer24Prompt26_V1"
+LOW_PU_LUMI="/eos/user/k/kraychev/DASSChool2026/long-ex/first_r_analysis/long-ex-smp-jet/D0_mkNtuples/LowPU.info"
 
 # step_one() {
 #     local input_path="$1"
@@ -12,17 +13,31 @@ JES_CORRECTION_TAG="Summer24Prompt26_V1"
 #     submit mergeNtuples -F "$input_path" D1_mergeNtuples /dev/null /dev/null
 # }
 
-step_two() {
+# step_two() {
+#     local input_path="$1"
+#     mkdir -p D2_applyJEScorrections
+#     submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections $SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz $JES_CORRECTION_TAG -N 5000000 -b -F
+# }
+
+step_three_one() {
     local input_path="$1"
-    mkdir -p D2_applyJEScorrections
-    submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections $SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz $JES_CORRECTION_TAG -N 5000000 -b -F
+    mkdir -p TriggerCurves
+    submit getTriggerCurves D2_applyJEScorrections TriggerCurves $LOW_PU_LUMI true -b -N 5000000
 }
+
+# step_three_two() {
+#     local input_path="$1"
+#     mkdir -p D3_applyDataNormalisation
+#     submit applyDataNormalisation D2_applyJEScorrections D3_applyDataNormalisation -N 5000000 -b -F
+# }
 
 main() {
     local input_path="$1"
 
     # step_one "$input_path"
-    step_two "$input_path"
+    # step_two "$input_path"
+    step_three_one "$input_path"
+
 }
 
 if [[ $# -lt 1 ]]; then
