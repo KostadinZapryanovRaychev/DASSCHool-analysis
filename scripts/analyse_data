@@ -30,7 +30,8 @@ run_step() {
 }
 
 step_one() {
-    printf '%s\n' "input from step one"
+    local input_path="$1"
+    parallel mergeNtuples -F "$input_path" D1_mergeNtuples/ D1_mergeNtuples /dev/null /dev/null
 }
 
 step_two() {
@@ -44,9 +45,10 @@ step_three() {
 }
 
 main() {
+    local input_path="$1"
     local previous_result
 
-    run_step "Step 1" step_one || return $?
+    run_step "Step 1" step_one "$input_path" || return $?
     previous_result="$STEP_RESULT"
 
     run_step "Step 2" step_two "$previous_result" || return $?
@@ -57,7 +59,12 @@ main() {
     printf '\nAll steps completed successfully.\n'
 }
 
-main || {
+if [[ $# -lt 1 ]]; then
+    printf 'Usage: %s <input_path>\n' "$0" >&2
+    exit 1
+fi
+
+main "$1" || {
     exit_code=$?
     printf 'Workflow stopped.\n' >&2
     exit "$exit_code"
