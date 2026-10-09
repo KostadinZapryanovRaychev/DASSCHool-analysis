@@ -17,7 +17,7 @@ submit mergeNtuples -F "$YOUR_DATASET" D1_mergeNtuples /dev/null /dev/null
 
 # Step 2: apply JES corrections
 mkdir -p D2_applyJEScorrections
-submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections "$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz" "$JES_CORRECTION_TAG" -N 5000000 -b -F
+submit applyJEScorrections D1_mergeNtuples D2_applyJEScorrections "$SCHOOL_EOS/Run3-26Prompt-Summer24-NanoAODv15/jet_jerc.json.gz" "$JES_CORRECTION_TAG" -N 5000000 -F
 
 # Step 3a: get trigger curves
 mkdir -p TriggerCurves
@@ -25,8 +25,8 @@ submit getTriggerCurves D2_applyJEScorrections TriggerCurves "$LOW_PU_LUMI" true
 
 # Step 3b: apply data normalisation
 mkdir -p D3_applyDataNormalisation
-submit -b -N 5000000 -F applyDataNormalisation D2_applyJEScorrections D3_applyDataNormalisation "$LOW_PU_LUMI" /dev/null "$TURNONS_TXT" "$TURNONS_ROOT" pt prescales
+submit -N 5000000 -F applyDataNormalisation D2_applyJEScorrections D3_applyDataNormalisation "$LOW_PU_LUMI" /dev/null "$TURNONS_TXT" "$TURNONS_ROOT" pt prescales
 
 # Step 4: get unfolded global distributions
 mkdir -p D4_applyUnf
-submit -b -N 5000000 -F getUnfGlobalDist D3_applyDataNormalisation D4_applyUnf true "$OBSERVABLES"
+submit -N 5000000 -F getUnfGlobalDist D3_applyDataNormalisation D4_applyUnf true "$OBSERVABLES"
